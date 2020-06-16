@@ -88,6 +88,9 @@ function RichTextToHTMLForSpreadsheet(object) {
       return richTextValue.getRuns().reduce((s, r) => {
         var bold, fontFamily, fontSize, foregroundColor, italic, keys, obj, strikethrough, style, text, underline;
         text = r.getText().replace(/\n/g, "<br>").replace(/ /g, "&nbsp;");
+        if (r.getLinkUrl()) {
+          text = `<a href="${r.getLinkUrl()}">${text}<\/a>`;
+        }
         style = r.getTextStyle();
         obj = {
           fontFamily: style.getFontFamily(),

@@ -145,7 +145,7 @@ function RichTextToHTMLForSpreadsheet() {
 }
 ```
 
-- When above demonstration image is converted to HTML format using this method, it can obtain this result. [https://jsfiddle.net/7e3mc10p/](https://jsfiddle.net/7e3mc10p/)
+- When the value of cell on Spreadsheet in above demonstration image is converted to HTML format using this method, it can obtain this result. [https://jsfiddle.net/7e3mc10p/](https://jsfiddle.net/7e3mc10p/)
 
 - When the range is only one cell, the string value of the HTML format is returned.
 - When the range is the multiple cells, the 2 dimensional array including the HTML format is returned.
@@ -181,5 +181,9 @@ If you have any questions and commissions for me, feel free to tell me.
 - v1.1.0 (June 16, 2020)
 
   1. Add new method of `RichTextToHTMLForSpreadsheet`. The method of `RichTextToHTMLForSpreadsheet` can convert the rich texts in the cells to the HTML format.
+
+- v1.1.1 (June 16, 2020)
+
+  1. About the method of `RichTextToHTMLForSpreadsheet`, I forgot to convert hyperlinks to HTML. This was modified.
 
 [TOP](#top)
