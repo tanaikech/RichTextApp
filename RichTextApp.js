@@ -16,36 +16,108 @@ function DocumentToSpreadsheet(object) {
 function SpreadsheetToDocument(object) {
     return new RichTextApp(object).SpreadsheetToDocument();
 }
+
+/**
+ * Convert rich text in a cell to HTML format.<br>
+ * @param {object} Object object
+ * @return {string} Return HTML data as a string value
+ */
+function RichTextToHTMLForSpreadsheet(object) {
+    return new RichTextApp(object).RichTextToHTMLForSpreadsheet();
+}
 ;
 (function(r) {
   var RichTextApp;
   RichTextApp = (function() {
-    var getRichTextFromDocument, getRichTextFromSpreadsheet, putRichTextToDocument, putRichTextToSpreadsheet, putTextStyleToObj;
+    var convertRichTextToHTMLForSpreadsheet, convertRichTextToHTMLForSpreadsheetSingle, getRichTextFromDocument, getRichTextFromSpreadsheet, putRichTextToDocument, putRichTextToSpreadsheet, putTextStyleToObj;
 
     class RichTextApp {
       constructor(obj_) {
-        if (!("range" in obj_) || !("document" in obj_)) {
-          throw new Error("Set 'range' object and 'document' object.");
+        if (!("range" in obj_)) {
+          throw new Error("Set 'range' object.");
         }
         this.obj = obj_;
       }
 
+      // --- methods --- begin
       DocumentToSpreadsheet() {
         var data;
+        if (!("document" in obj_)) {
+          throw new Error("Set ''document' object.");
+        }
         data = getRichTextFromDocument.call(this);
         return putRichTextToSpreadsheet.call(this, data);
       }
 
       SpreadsheetToDocument() {
         var data, text;
+        if (!("document" in obj_)) {
+          throw new Error("Set ''document' object.");
+        }
         [data, text] = getRichTextFromSpreadsheet.call(this);
         putRichTextToDocument.call(this, data);
         return text;
       }
 
+      RichTextToHTMLForSpreadsheet() {
+        return convertRichTextToHTMLForSpreadsheet.call(this);
+      }
+
     };
 
     RichTextApp.name = "RichTextApp";
+
+    // --- methods --- end
+    convertRichTextToHTMLForSpreadsheet = function() {
+      var htmls, rt;
+      rt = this.obj.range.getRichTextValues();
+      htmls = rt.map((row) => {
+        return row.map((col) => {
+          return convertRichTextToHTMLForSpreadsheetSingle.call(this, col);
+        });
+      });
+      if (htmls.length === 0) {
+        throw new Error("Error: Wrong range.");
+      } else if (htmls.length === 1) {
+        return htmls[0][0];
+      }
+      return htmls;
+    };
+
+    convertRichTextToHTMLForSpreadsheetSingle = function(richTextValue) {
+      return richTextValue.getRuns().reduce((s, r) => {
+        var bold, fontFamily, fontSize, foregroundColor, italic, keys, obj, strikethrough, style, text, underline;
+        text = r.getText().replace(/\n/g, "<br>").replace(/ /g, "&nbsp;");
+        style = r.getTextStyle();
+        obj = {
+          fontFamily: style.getFontFamily(),
+          fontSize: style.getFontSize(),
+          foregroundColor: style.getForegroundColor(),
+          bold: style.isBold(),
+          italic: style.isItalic(),
+          strikethrough: style.isStrikethrough(),
+          underline: style.isUnderline()
+        };
+        fontFamily = obj.fontFamily ? `font-family: '${obj.fontFamily}';` : "";
+        fontSize = obj.fontSize ? `font-size: ${obj.fontSize * 1.333}px;` : "";
+        foregroundColor = obj.foregroundColor ? `color: ${obj.foregroundColor};` : "";
+        bold = obj.bold ? 'font-weight: bold;' : "";
+        italic = obj.italic ? 'font-style: italic;' : "";
+        strikethrough = obj.strikethrough ? 'text-decoration: line-through;' : "";
+        underline = obj.underline ? 'text-decoration: underline;' : "";
+        keys = [fontFamily, fontSize, foregroundColor, bold, italic, strikethrough, underline];
+        if (keys.some((e) => {
+          return e !== "";
+        })) {
+          s += `${keys.reduce((str, e) => {
+            return str += e;
+          }, '<span style="')}">${text}</span>`;
+        } else {
+          s += text;
+        }
+        return s;
+      }, "");
+    };
 
     putTextStyleToObj = function(c, style) {
       return {

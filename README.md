@@ -43,10 +43,11 @@ In the current stage, the rich text of Google Spreadsheet can use the following 
 
 # Methods
 
-| Methods                                                 | Description                                 |
-| :------------------------------------------------------ | :------------------------------------------ |
-| [DocumentToSpreadsheet(object)](#documenttospreadsheet) | Copy rich text from Document to Spreadsheet |
-| [SpreadsheetToDocument(object)](#spreadsheettodocument) | Copy rich text from Spreadsheet to Document |
+| Methods                                                               | Description                                     |
+| :-------------------------------------------------------------------- | :---------------------------------------------- |
+| [DocumentToSpreadsheet(object)](#documenttospreadsheet)               | Copy rich text from Document to Spreadsheet     |
+| [SpreadsheetToDocument(object)](#spreadsheettodocument)               | Copy rich text from Spreadsheet to Document     |
+| [RichTextToHTMLForSpreadsheet(object)](#richtexttohtmlforspreadsheet) | Convert rich texts in the cells to HTML format. |
 
 <a name="usage"></a>
 
@@ -126,6 +127,29 @@ function SpreadsheetToDocument() {
 
 In this sample script, the text of the cell "A1" of the 1st sheet in the Spreadsheet is put to the Document with the text style with the append method.
 
+<a name="richtexttohtmlforspreadsheet"></a>
+
+### `RichTextToHTMLForSpreadsheet`
+
+In this method, the rich texts in the cells on Google Spreadsheet are converted to the HTML format.
+
+#### Sample script
+
+```javascript
+function RichTextToHTMLForSpreadsheet() {
+  var ss = SpreadsheetApp.openById("###");
+  var sheet = ss.getSheets()[0];
+  var range = sheet.getRange("A1:A2");
+  var res = RichTextApp_test.RichTextToHTMLForSpreadsheet({ range: range });
+  console.log(res);
+}
+```
+
+- When above demonstration image is converted to HTML format using this method, it can obtain this result. [https://jsfiddle.net/7e3mc10p/](https://jsfiddle.net/7e3mc10p/)
+
+- When the range is only one cell, the string value of the HTML format is returned.
+- When the range is the multiple cells, the 2 dimensional array including the HTML format is returned.
+
 ## Limitations
 
 As the limitation, in the current stage, the table, list and images cannot be used with the rich text of Google Spreadsheet. So please use only the texts with the text style.
@@ -153,5 +177,9 @@ If you have any questions and commissions for me, feel free to tell me.
 - v1.0.0 (February 19, 2020)
 
   1. Initial release.
+
+- v1.1.0 (June 16, 2020)
+
+  1. Add new method of `RichTextToHTMLForSpreadsheet`. The method of `RichTextToHTMLForSpreadsheet` can convert the rich texts in the cells to the HTML format.
 
 [TOP](#top)
