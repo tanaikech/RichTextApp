@@ -187,4 +187,8 @@ If you have any questions and commissions for me, feel free to tell me.
 
   1. About the method of `RichTextToHTMLForSpreadsheet`, I forgot to convert hyperlinks to HTML. This was modified.
 
+- v1.1.2 (June 16, 2020)
+
+  1. When one row and several columns are used as the range, only 1st column is returned. This bug was removed.
+
 [TOP](#top)

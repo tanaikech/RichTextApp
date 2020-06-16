@@ -78,7 +78,7 @@ function RichTextToHTMLForSpreadsheet(object) {
       });
       if (htmls.length === 0) {
         throw new Error("Error: Wrong range.");
-      } else if (htmls.length === 1) {
+      } else if (htmls.length === 1 && htmls[0].length === 1) {
         return htmls[0][0];
       }
       return htmls;
