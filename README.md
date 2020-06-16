@@ -146,9 +146,10 @@ function RichTextToHTMLForSpreadsheet() {
 ```
 
 - When the value of cell on Spreadsheet in above demonstration image is converted to HTML format using this method, it can obtain this result. [https://jsfiddle.net/7e3mc10p/](https://jsfiddle.net/7e3mc10p/)
-
 - When the range is only one cell, the string value of the HTML format is returned.
 - When the range is the multiple cells, the 2 dimensional array including the HTML format is returned.
+- This method was answered for [this thread](https://stackoverflow.com/q/62389397).
+
 
 ## Limitations
 
