@@ -140,7 +140,7 @@ function RichTextToHTMLForSpreadsheet() {
   var ss = SpreadsheetApp.openById("###");
   var sheet = ss.getSheets()[0];
   var range = sheet.getRange("A1:A2");
-  var res = RichTextApp_test.RichTextToHTMLForSpreadsheet({ range: range });
+  var res = RichTextApp.RichTextToHTMLForSpreadsheet({ range: range });
   console.log(res);
 }
 ```
