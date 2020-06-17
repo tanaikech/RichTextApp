@@ -150,7 +150,6 @@ function RichTextToHTMLForSpreadsheet() {
 - When the range is the multiple cells, the 2 dimensional array including the HTML format is returned.
 - This method was answered for [this thread](https://stackoverflow.com/q/62389397).
 
-
 ## Limitations
 
 As the limitation, in the current stage, the table, list and images cannot be used with the rich text of Google Spreadsheet. So please use only the texts with the text style.
@@ -190,5 +189,9 @@ If you have any questions and commissions for me, feel free to tell me.
 - v1.1.2 (June 16, 2020)
 
   1. When one row and several columns are used as the range, only 1st column is returned. This bug was removed.
+
+- v1.1.3 (June 17, 2020)
+
+  1. The variable name for the error processing was not correct. The bug was removed.
 
 [TOP](#top)

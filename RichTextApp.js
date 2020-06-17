@@ -42,8 +42,8 @@ function RichTextToHTMLForSpreadsheet(object) {
       // --- methods --- begin
       DocumentToSpreadsheet() {
         var data;
-        if (!("document" in obj_)) {
-          throw new Error("Set ''document' object.");
+        if (!(this.obj.hasOwnProperty("document"))) {
+          throw new Error("Set 'document' object.");
         }
         data = getRichTextFromDocument.call(this);
         return putRichTextToSpreadsheet.call(this, data);
@@ -51,8 +51,8 @@ function RichTextToHTMLForSpreadsheet(object) {
 
       SpreadsheetToDocument() {
         var data, text;
-        if (!("document" in obj_)) {
-          throw new Error("Set ''document' object.");
+        if (!(this.obj.hasOwnProperty("document"))) {
+          throw new Error("Set 'document' object.");
         }
         [data, text] = getRichTextFromSpreadsheet.call(this);
         putRichTextToDocument.call(this, data);
