@@ -150,6 +150,55 @@ function RichTextToHTMLForSpreadsheet() {
 - When the range is the multiple cells, the 2 dimensional array including the HTML format is returned.
 - This method was answered for [this thread](https://stackoverflow.com/q/62389397).
 
+<a name="samples"></a>
+
+## Sample script using this library
+
+### 1. Convert HTML data to Rich Text on Google Spreadsheet
+
+When this library is used, the HTML data in a cell on Google Spreadsheet can be converted to the rich text and put to the cell. The flow of this is as follows.
+
+1. Retrieve HTML from a cell.
+2. Create Google Document by converting HTML to Google Document as a temporal file.
+   - In this case, Drive API is used.
+3. Put the value to a cell as the rich text using the method of "[DocumentToSpreadsheet](#documenttospreadsheet)".
+4. Remove the temporal file.
+
+In this sample script, it supposes that the HTML data is put to a cell "A1" of the 1st tab on Google Spreadsheet, and the converted rich text is put to the cell "A2".
+
+#### Sample script
+
+In this sample script, Drive API of Advanced Google services is used. So before you use this, please enable Drive API at Advanced Google services.
+
+```javascript
+function convertHTMLToRichText() {
+  var ss = SpreadsheetApp.openById("###"); // Please set the Spreadsheet ID.
+  var sheet = ss.getSheets()[0];
+
+  // 1. Retrieve HTML from a cell.
+  var html = sheet.getRange("A1").getValue();
+
+  // 2. Create Google Document by converting HTML to Google Document as a temporal file.
+  const blob = Utilities.newBlob(html, MimeType.HTML, "sample.html");
+  const tempDocId = Drive.Files.insert(
+    { title: "temp", mimeType: MimeType.GOOGLE_DOCS },
+    blob
+  ).id;
+
+  // 3. Put the value to a cell as the rich text using the method of "DocumentToSpreadsheet".
+  var res = RichTextApp.DocumentToSpreadsheet({
+    range: sheet.getRange("A2"),
+    document: DocumentApp.openById(tempDocId),
+  });
+  console.log(res);
+
+  // 4. Remove the temporal file.
+  DriveApp.getFileById(tempDocId).setTrashed(true);
+}
+```
+
+- As an important point, when the HTML data is converted to Google Document, there is the case that the font family is changed. I think that this might be the current specification of Drive API. So please be careful this.
+
 ## Limitations
 
 As the limitation, in the current stage, the table, list and images cannot be used with the rich text of Google Spreadsheet. So please use only the texts with the text style.
@@ -193,5 +242,6 @@ If you have any questions and commissions for me, feel free to tell me.
 - v1.1.3 (June 17, 2020)
 
   1. The variable name for the error processing was not correct. The bug was removed.
+  1. Added [a sample script](#samples) for using this library.
 
 [TOP](#top)
