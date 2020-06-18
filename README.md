@@ -179,8 +179,8 @@ function convertHTMLToRichText() {
   var html = sheet.getRange("A1").getValue();
 
   // 2. Create Google Document by converting HTML to Google Document as a temporal file.
-  const blob = Utilities.newBlob(html, MimeType.HTML, "sample.html");
-  const tempDocId = Drive.Files.insert(
+  var blob = Utilities.newBlob(html, MimeType.HTML, "sample.html");
+  var tempDocId = Drive.Files.insert(
     { title: "temp", mimeType: MimeType.GOOGLE_DOCS },
     blob
   ).id;
