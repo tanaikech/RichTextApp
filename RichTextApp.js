@@ -25,11 +25,20 @@ function SpreadsheetToDocument(object) {
 function RichTextToHTMLForSpreadsheet(object) {
     return new RichTextApp(object).RichTextToHTMLForSpreadsheet();
 }
+
+/**
+ * Auto resize font in a cell of Spreadsheet.<br>
+ * @param {object} Object object
+ * @return {object} Range source range
+ */
+function AutoResizeFontForSpreadsheet(object) {
+    return new RichTextApp(object).AutoResizeFontForSpreadsheet();
+}
 ;
 (function(r) {
   var RichTextApp;
   RichTextApp = (function() {
-    var convertRichTextToHTMLForSpreadsheet, convertRichTextToHTMLForSpreadsheetSingle, getRichTextFromDocument, getRichTextFromSpreadsheet, putRichTextToDocument, putRichTextToSpreadsheet, putTextStyleToObj;
+    var autoResizeFontForSpreadsheet, convertRichTextToHTMLForSpreadsheet, convertRichTextToHTMLForSpreadsheetSingle, getRichTextFromDocument, getRichTextFromSpreadsheet, putRichTextToDocument, putRichTextToSpreadsheet, putTextStyleToObj;
 
     class RichTextApp {
       constructor(obj_) {
@@ -63,11 +72,58 @@ function RichTextToHTMLForSpreadsheet(object) {
         return convertRichTextToHTMLForSpreadsheet.call(this);
       }
 
+      AutoResizeFontForSpreadsheet() {
+        return autoResizeFontForSpreadsheet.call(this);
+      }
+
     };
 
     RichTextApp.name = "RichTextApp";
 
     // --- methods --- end
+    autoResizeFontForSpreadsheet = function() {
+      var c, columnObj, endColumn, endRow, fontSize, j, k, l, range, ratio, ref, ref1, ref2, ref3, ref4, resizedWidth, sheet, srcRange, ss, startColumn, startRow, tempRange, tempSheet, toLarge;
+      if (!this.obj.hasOwnProperty("range")) {
+        throw new Error("Error: Wrong range.");
+      }
+      range = this.obj.range;
+      toLarge = this.obj.hasOwnProperty("toLarge") ? this.obj.toLarge : false;
+      sheet = range.getSheet();
+      ss = sheet.getParent();
+      startColumn = range.getColumn();
+      endColumn = range.getColumn() + range.getNumColumns();
+      startRow = range.getRow();
+      endRow = range.getRow() + range.getNumRows();
+      columnObj = [];
+      for (c = j = ref = startColumn, ref1 = endColumn; (ref <= ref1 ? j < ref1 : j > ref1); c = ref <= ref1 ? ++j : --j) {
+        columnObj.push({
+          column: c,
+          width: sheet.getColumnWidth(c)
+        });
+      }
+      tempSheet = ss.insertSheet("tempForAutoresizeFont");
+      sheet.activate();
+      tempRange = tempSheet.getRange("A1");
+      for (r = k = ref2 = startRow, ref3 = endRow; (ref2 <= ref3 ? k < ref3 : k > ref3); r = ref2 <= ref3 ? ++k : --k) {
+        for (c = l = 0, ref4 = columnObj.length; (0 <= ref4 ? l < ref4 : l > ref4); c = 0 <= ref4 ? ++l : --l) {
+          srcRange = sheet.getRange(r, columnObj[c].column);
+          tempSheet.setColumnWidth(1, columnObj[c].width);
+          srcRange.copyTo(tempRange);
+          tempSheet.autoResizeColumn(1);
+          resizedWidth = tempSheet.getColumnWidth(1);
+          tempSheet.setColumnWidth(1, columnObj[c].width);
+          ratio = columnObj[c].width / resizedWidth;
+          if (ratio > 1 && !toLarge) {
+            continue;
+          }
+          fontSize = srcRange.getFontSize();
+          srcRange.setFontSize(Math.ceil(fontSize * ratio));
+        }
+      }
+      ss.deleteSheet(tempSheet);
+      return range;
+    };
+
     convertRichTextToHTMLForSpreadsheet = function() {
       var htmls, rt;
       rt = this.obj.range.getRichTextValues();

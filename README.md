@@ -9,7 +9,7 @@
 
 ![](images/fig1.png)
 
-**This is a GAS library for copying the rich text with the text styles from Google Document to Google Spreadsheet or from Google Spreadsheet to Google Document using Google Apps Script (GAS). And, also the rich texts in the cells can be converted to HTML format.**
+**This is a GAS library for copying the rich text with the text styles from Google Document to Google Spreadsheet or from Google Spreadsheet to Google Document using Google Apps Script (GAS). And, also the rich texts in the cells can be converted to HTML format. Furthermore, the text length to fit in the cell width can be automatically adjusted.**
 
 <a name="description"></a>
 
@@ -22,6 +22,10 @@ This library can do as follows.
 1. Rich text in Google Document can be copied to the cell of Google Spreadsheet with keeping the text style.
 
 2. Rich text in the cell of Google Spreadsheet can be copied to Google Document with keeping the text style.
+
+3. Rich texts in the cells can be converted to HTML format.
+
+4. Text length to fit in the cell width can be automatically adjusted by changing the font size.
 
 ## Available text styles
 
@@ -48,6 +52,7 @@ In the current stage, the rich text of Google Spreadsheet can use the following 
 | [DocumentToSpreadsheet(object)](#documenttospreadsheet)               | Copy rich text from Document to Spreadsheet     |
 | [SpreadsheetToDocument(object)](#spreadsheettodocument)               | Copy rich text from Spreadsheet to Document     |
 | [RichTextToHTMLForSpreadsheet(object)](#richtexttohtmlforspreadsheet) | Convert rich texts in the cells to HTML format. |
+| [AutoResizeFontForSpreadsheet](#autoresizefontforspreadsheet)         | Adjust text length to fit in the cell width.    |
 
 <a name="usage"></a>
 
@@ -150,6 +155,39 @@ function RichTextToHTMLForSpreadsheet() {
 - When the range is the multiple cells, the 2 dimensional array including the HTML format is returned.
 - This method was answered for [this thread](https://stackoverflow.com/q/62389397).
 
+<a name="autoresizefontforspreadsheet"></a>
+
+### `AutoResizeFontForSpreadsheet`
+
+In this method, the text length to fit in the cell width can be automatically adjusted by changing the font size.
+
+#### Sample script
+
+```javascript
+function AutoResizeFontForSpreadsheet() {
+  const ss = SpreadsheetApp.openById("###");
+  const sheet = ss.getSheetByName("Sheet1");
+  const object = {
+    range: sheet.getRange("A1:A6"),
+    toLarge: true,
+  };
+  const res = RichTextApp.AutoResizeFontForSpreadsheet(object);
+  console.log(res);
+}
+```
+
+### Demo
+
+In this demonstration, the lengths of texts in the cells "A1:A6" are matched to the cell width by changing the font size.
+
+![](images/fig2a.gif)
+
+Above case, `toLarge` is `true`.
+
+![](images/fig2b.gif)
+
+Above case, `toLarge` is `false`.
+
 <a name="samples"></a>
 
 ## Sample script using this library
@@ -243,5 +281,9 @@ If you have any questions and commissions for me, feel free to tell me.
 
   1. The variable name for the error processing was not correct. The bug was removed.
   1. Added [a sample script](#samples) for using this library.
+
+- v1.2.0 (July 3, 2020)
+
+  1. Added the method of [`AutoResizeFontForSpreadsheet`](#autoresizefontforspreadsheet). This method can automatically adjust the text length to fit in the cell width by changing the font size.
 
 [TOP](#top)
